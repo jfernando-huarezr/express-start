@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const morgan_1 = __importDefault(require("morgan"));
 //express app
 const app = (0, express_1.default)();
 //register view engine
@@ -12,22 +13,25 @@ app.set("view engine", "ejs");
 //app.set("views", "myviews");
 //listen for requests
 app.listen(3000);
-//custom middleware
-app.use((req, res, next) => {
-    console.log("**** new request made: ");
-    console.log(`host: ${req.hostname}`);
-    console.log(`path: ${req.path}`);
-    console.log(`method: ${req.method}`);
-    //if i let it end here, the browser hangs there, gets stuck, doesnt know where to go.
-    //i need to use next() so the server knows it can move on
-    next();
-});
-//second middleware
-app.use((req, res, next) => {
-    console.log("**** second middleware");
-    next();
-});
 //third party middlewares - example morgan
+app.use((0, morgan_1.default)("tiny"));
+//middleware & static files
+app.use(express_1.default.static("public"));
+// //custom middleware
+// app.use((req, res, next) => {
+//   console.log("**** new request made: ");
+//   console.log(`host: ${req.hostname}`);
+//   console.log(`path: ${req.path}`);
+//   console.log(`method: ${req.method}`);
+//   //if i let it end here, the browser hangs there, gets stuck, doesnt know where to go.
+//   //i need to use next() so the server knows it can move on
+//   next();
+// });
+// //second middleware
+// app.use((req, res, next) => {
+//   console.log("**** second middleware");
+//   next();
+// });
 //response to requests
 //what path to listen, callback function
 app.get("/", (req, res) => {
