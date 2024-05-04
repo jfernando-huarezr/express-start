@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fernando Blog | <%= title %></title>
-  </head>
+  <%- include('./partials/head.ejs') %>
   <body>
     <%- include('./partials/nav.ejs') %>
 
@@ -30,5 +26,7 @@
         nisi quam enim omnis fuga nemo, repudiandae rerum maxime ullam!
       </p>
     </div>
+
+    <%- include('./partials/footer.ejs') %>
   </body>
 </html>
