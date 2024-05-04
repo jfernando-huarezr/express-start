@@ -12,6 +12,22 @@ app.set("view engine", "ejs");
 //app.set("views", "myviews");
 //listen for requests
 app.listen(3000);
+//custom middleware
+app.use((req, res, next) => {
+    console.log("**** new request made: ");
+    console.log(`host: ${req.hostname}`);
+    console.log(`path: ${req.path}`);
+    console.log(`method: ${req.method}`);
+    //if i let it end here, the browser hangs there, gets stuck, doesnt know where to go.
+    //i need to use next() so the server knows it can move on
+    next();
+});
+//second middleware
+app.use((req, res, next) => {
+    console.log("**** second middleware");
+    next();
+});
+//third party middlewares - example morgan
 //response to requests
 //what path to listen, callback function
 app.get("/", (req, res) => {
