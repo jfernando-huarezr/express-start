@@ -1,8 +1,13 @@
 import express from "express";
 import morgan from "morgan";
+import mongoose from "mongoose";
 
 //express app
 const app = express();
+
+//connect to mongoDB
+const dataBaseURI =
+  "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/?retryWrites=true&w=majority&appName=node-basics";
 
 //register view engine
 app.set("view engine", "ejs");

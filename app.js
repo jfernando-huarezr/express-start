@@ -7,6 +7,8 @@ const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 //express app
 const app = (0, express_1.default)();
+//connect to mongoDB
+const dataBaseURI = "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/?retryWrites=true&w=majority&appName=node-basics";
 //register view engine
 app.set("view engine", "ejs");
 //select the folder. default is views
