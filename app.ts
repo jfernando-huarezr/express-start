@@ -1,21 +1,29 @@
 import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
+import { Blog } from "./models/blog";
 
 //express app
 const app = express();
 
 //connect to mongoDB
-const dataBaseURI =
-  "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/?retryWrites=true&w=majority&appName=node-basics";
+const databaseURI =
+  "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/nodetuts?retryWrites=true&w=majority&appName=node-basics";
+mongoose
+  .connect(databaseURI)
+  .then((result) => {
+    console.log("connected to databse");
+    //listen for requests
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 //register view engine
 app.set("view engine", "ejs");
 //select the folder. default is views
 //app.set("views", "myviews");
-
-//listen for requests
-app.listen(3000);
 
 //third party middlewares - example morgan
 app.use(morgan("tiny"));
@@ -49,31 +57,28 @@ app.get("/", (req, res) => {
   //with sendFile the root by default is the root of the computer
   //we need to tell it where the root of the project is
   //res.sendFile("./views/index.html", { root: __dirname });
-
-  const blogs: object[] = [
-    {
-      title: "Yoshi finds eggs",
-      snippet: "lorem ipsum dolor sit amet consectetur",
-    },
-    {
-      title: "Mario finds stars",
-      snippet: "lorem ipsum dolor sit amet consectetur",
-    },
-    {
-      title: "How to defeat Bowser",
-      snippet: "lorem ipsum dolor sit amet consectetur",
-    },
-  ];
-
-  //change to render a view using the view engine
-  //as second parameter you can pass data into an object
-  res.render("index", { title: "Home", blogs });
+  res.redirect("/blogs");
 });
 
 app.get("/about", (req, res) => {
   //res.send("<p>About page</p>");
   //res.sendFile("./views/about.html", { root: __dirname });
   res.render("about", { title: "About" });
+});
+
+//blog routes
+app.get("/blogs", (req, res) => {
+  Blog.find()
+    .sort({ createAt: -1 }) //newest to oldest
+    .then((result) => {
+      res.render("index", { title: "All Blogs", blogs: result });
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+
+  //change to render a view using the view engine
+  //as second parameter you can pass data into an object
 });
 
 app.get("/blogs/create", (req, res) => {

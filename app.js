@@ -5,16 +5,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const blog_1 = require("./models/blog");
 //express app
 const app = (0, express_1.default)();
 //connect to mongoDB
-const dataBaseURI = "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/?retryWrites=true&w=majority&appName=node-basics";
+const databaseURI = "mongodb+srv://tester:dishonored19@node-basics.oxexicp.mongodb.net/nodetuts?retryWrites=true&w=majority&appName=node-basics";
+mongoose_1.default
+    .connect(databaseURI)
+    .then((result) => {
+    console.log("connected to databse");
+    //listen for requests
+    app.listen(3000);
+})
+    .catch((err) => {
+    console.log(err);
+});
 //register view engine
 app.set("view engine", "ejs");
 //select the folder. default is views
 //app.set("views", "myviews");
-//listen for requests
-app.listen(3000);
 //third party middlewares - example morgan
 app.use((0, morgan_1.default)("tiny"));
 //middleware & static files
@@ -41,28 +51,25 @@ app.get("/", (req, res) => {
     //with sendFile the root by default is the root of the computer
     //we need to tell it where the root of the project is
     //res.sendFile("./views/index.html", { root: __dirname });
-    const blogs = [
-        {
-            title: "Yoshi finds eggs",
-            snippet: "lorem ipsum dolor sit amet consectetur",
-        },
-        {
-            title: "Mario finds stars",
-            snippet: "lorem ipsum dolor sit amet consectetur",
-        },
-        {
-            title: "How to defeat Bowser",
-            snippet: "lorem ipsum dolor sit amet consectetur",
-        },
-    ];
-    //change to render a view using the view engine
-    //as second parameter you can pass data into an object
-    res.render("index", { title: "Home", blogs });
+    res.redirect("/blogs");
 });
 app.get("/about", (req, res) => {
     //res.send("<p>About page</p>");
     //res.sendFile("./views/about.html", { root: __dirname });
     res.render("about", { title: "About" });
+});
+//blog routes
+app.get("/blogs", (req, res) => {
+    blog_1.Blog.find()
+        .sort({ createAt: -1 }) //newest to oldest
+        .then((result) => {
+        res.render("index", { title: "All Blogs", blogs: result });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
+    //change to render a view using the view engine
+    //as second parameter you can pass data into an object
 });
 app.get("/blogs/create", (req, res) => {
     res.render("create", { title: "Create a new Blog" });
