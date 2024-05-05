@@ -29,6 +29,7 @@ app.set("view engine", "ejs");
 app.use((0, morgan_1.default)("tiny"));
 //middleware & static files
 app.use(express_1.default.static("public"));
+app.use(express_1.default.urlencoded({ extended: true })); //takes url encoded an passes it
 // //custom middleware
 // app.use((req, res, next) => {
 //   console.log("**** new request made: ");
@@ -70,6 +71,37 @@ app.get("/blogs", (req, res) => {
     });
     //change to render a view using the view engine
     //as second parameter you can pass data into an object
+});
+//create a new blog
+app.post("/blogs", (req, res) => {
+    const blog = new blog_1.Blog(req.body);
+    blog
+        .save()
+        .then((result) => {
+        res.redirect("/blogs");
+    })
+        .catch((err) => {
+        console.log(err);
+    });
+});
+app.get("/blogs/:id", (req, res) => {
+    const id = req.params.id;
+    blog_1.Blog.findById(id)
+        .then((result) => {
+        res.render("details", { blog: result, title: "Blog Details" });
+    })
+        .catch((err) => {
+        console.log(err);
+    });
+});
+//delete
+app.delete("/blogs/:id", (req, res) => {
+    const id = req.params.id;
+    blog_1.Blog.findByIdAndDelete(id)
+        .then((result) => {
+        res.json({ redirect: "/blogs" });
+    })
+        .catch((err) => console.log(err));
 });
 app.get("/blogs/create", (req, res) => {
     res.render("create", { title: "Create a new Blog" });
