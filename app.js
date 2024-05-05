@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const morgan_1 = __importDefault(require("morgan"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const blog_1 = require("./models/blog");
+const blogRoutes_1 = require("./routes/blogRoutes");
 //express app
 const app = (0, express_1.default)();
 //connect to mongoDB
@@ -60,56 +60,7 @@ app.get("/about", (req, res) => {
     res.render("about", { title: "About" });
 });
 //blog routes
-app.get("/blogs", (req, res) => {
-    blog_1.Blog.find()
-        .sort({ createAt: -1 }) //newest to oldest
-        .then((result) => {
-        res.render("index", { title: "All Blogs", blogs: result });
-    })
-        .catch((err) => {
-        console.log(err);
-    });
-    //change to render a view using the view engine
-    //as second parameter you can pass data into an object
-});
-//create a new blog
-app.post("/blogs", (req, res) => {
-    const blog = new blog_1.Blog(req.body);
-    blog
-        .save()
-        .then((result) => {
-        res.redirect("/blogs");
-    })
-        .catch((err) => {
-        console.log(err);
-    });
-});
-app.get("/blogs/:id", (req, res) => {
-    const id = req.params.id;
-    blog_1.Blog.findById(id)
-        .then((result) => {
-        res.render("details", { blog: result, title: "Blog Details" });
-    })
-        .catch((err) => {
-        console.log(err);
-    });
-});
-//delete
-app.delete("/blogs/:id", (req, res) => {
-    const id = req.params.id;
-    blog_1.Blog.findByIdAndDelete(id)
-        .then((result) => {
-        res.json({ redirect: "/blogs" });
-    })
-        .catch((err) => console.log(err));
-});
-app.get("/blogs/create", (req, res) => {
-    res.render("create", { title: "Create a new Blog" });
-});
-//redirects
-app.get("/about-us", (req, res) => {
-    res.redirect("/about");
-});
+app.use("/blogs", blogRoutes_1.router);
 //404 page
 //how does 'use' work?
 //well, it will launch for any request, but only if the request reaches this point
