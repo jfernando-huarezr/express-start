@@ -10,11 +10,11 @@ const router = express_1.default.Router();
 exports.router = router;
 //blog routes
 router.get("/", blogController_1.blog_index);
-//see details of a blog
-router.get("/:id", blogController_1.blog_details);
 //create a new blog
 router.post("/", blogController_1.blog_create_post);
 //go to /create page
 router.get("/create", blogController_1.blog_create_get);
+//see details of a blog
+router.get("/:id", blogController_1.blog_details);
 //delete
 router.delete("/:id", blogController_1.blog_delete);
