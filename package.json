@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon app"
+    "watch": "nodemon app.ts",
+    "watch-ts": "tsc -w",
+    "debug-chrome": "nodemon --inspect app.js",
+    "start": "ts-node app.ts"
   },
   "keywords": [],
   "author": "",
