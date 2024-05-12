@@ -27,10 +27,12 @@ const blog_details = (req: Request, res: Response) => {
     });
 };
 
+//retrieve the webpage to show the create a new blog html in the browser
 const blog_create_get = (req: Request, res: Response) => {
   res.render("create", { title: "Create a new Blog" });
 };
 
+//create a new blog on the database
 const blog_create_post = (req: Request, res: Response) => {
   const blog = new Blog(req.body);
   blog

@@ -18,6 +18,8 @@ const blogSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+//can add schema validations?
+
 const Blog = mongoose.model("Blog", blogSchema);
 
 export { Blog };
